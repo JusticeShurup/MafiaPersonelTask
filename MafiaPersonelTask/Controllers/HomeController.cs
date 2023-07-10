@@ -214,6 +214,8 @@ namespace Mafia.Controllers
                 Console.WriteLine($"{ex.Message}");
             }
         }
+        /*
+         
         public ActionResult EarnMoney(int MemberId)
         {
             FamilyMember member = context.FamilyMembers.Find(MemberId);
@@ -224,6 +226,7 @@ namespace Mafia.Controllers
             foreach (Organization org in member.)
             return Ok();
         }
+         */ 
 
         //--POST
         /*
