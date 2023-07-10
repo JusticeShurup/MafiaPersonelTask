@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MafiaPersonelTask", "MafiaPersonelTask\MafiaPersonelTask.csproj", "{483A3E0C-EF41-4B92-B856-2C0EF84D49C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{FA1DD4B8-8391-41C1-89C6-EADA840621D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{483A3E0C-EF41-4B92-B856-2C0EF84D49C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{483A3E0C-EF41-4B92-B856-2C0EF84D49C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{483A3E0C-EF41-4B92-B856-2C0EF84D49C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{483A3E0C-EF41-4B92-B856-2C0EF84D49C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA1DD4B8-8391-41C1-89C6-EADA840621D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA1DD4B8-8391-41C1-89C6-EADA840621D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA1DD4B8-8391-41C1-89C6-EADA840621D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA1DD4B8-8391-41C1-89C6-EADA840621D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20FB140C-80C3-4797-ADC7-2DD557702099}
+	EndGlobalSection
+EndGlobal
