@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace Domain.Entities;
 
-public partial class Product
+public partial class Shop
 {
-    public string ProductName { get; set; } = null!;
+    public int Id { get; set; }
+
+    public string? ProductName { get; set; }
 
     public int? Count { get; set; }
 

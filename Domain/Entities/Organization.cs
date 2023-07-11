@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Domain.Enums;
 
 namespace Domain.Entities;
 
@@ -23,6 +22,8 @@ public partial class Organization
     public int? CollectorId { get; set; }
 
     public string? ImageUrl { get; set; }
+
+    public virtual FamilyMember? Collector { get; set; }
 
     public virtual OrganizationType? OrganizationType { get; set; }
 }

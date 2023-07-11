@@ -16,28 +16,35 @@ namespace MafiaPersonelTask.Controllers
     {
         private readonly MafiaPersonalContext context = new ();
 
+        private static Dictionary<string, int> AmmunitionTypes = new()
+        {
+            { "Glock", 1 },
+            { "M4", 2 },
+            { "AK47", 3 }
+        };
+
         [HttpGet]
         public IActionResult GetAllProducts()
         {
-            return Ok(context.Products.ToList());
+            return Ok(context.Shops.ToList());
         }
 
         [HttpGet]
         public IActionResult GetProduct(string ProductName)
         {
-            Product? product = null;
+            Shop? shop = null;
             try
             {
-                product = context.Products.Where(p => p.ProductName == ProductName).Single();
+                shop = context.Shops.Where(p => p.ProductName == ProductName).Single();
             }
             catch (Exception ex) 
             {
                 Console.WriteLine(ex.Message);
             }
          
-            return product == null ? BadRequest() : Ok(product);
+            return shop == null ? BadRequest() : Ok(shop);
         }
- 
+        /*
         public ActionResult BuyProduct(string ProductName, int MemberId, int CountToBuy)
         {
             Product? product = null;
@@ -115,6 +122,105 @@ namespace MafiaPersonelTask.Controllers
                 Console.WriteLine(ex.Message);
             }
             return BadRequest();
+        }
+         */ 
+
+        public ActionResult GetWeapons()
+        {
+            return Ok(context.Weapons.ToList());
+        }
+
+        public ActionResult GetFamilyMemberWeapon(int id)
+        { 
+            FamilyMember member = context.FamilyMembers.Where(p => p.Id == id).Single();
+            if (member == null) return NotFound("Такой член мафии не найден");
+            Weapon weapon = context.Weapons.Where(p => p.Id == id).Single();
+            if (weapon == null) return NotFound("У этого члена мафии нет оружия");
+            return Ok(weapon);
+        }
+
+        public ActionResult GetMafiaFamilyMoney(int id) 
+        {
+            MafiaFamily family = context.MafiaFamilies.Where(p => p.Id == id).Single();
+            if (family == null) return NotFound();
+            return Ok(family.Money);
+        }
+
+
+        public ActionResult BuyWeapon(int FamilyMemberId, string WeaponName)
+        {
+            FamilyMember member = context.FamilyMembers.Where(p => p.Id == FamilyMemberId).Single();
+            if (member == null) return NotFound("Не найден такой член семьи");
+            MafiaFamily family = context.MafiaFamilies.Where(p => p.Id == member.MafiaFamilyId).Single();
+            //if (weapon == null) return BadRequest("У члена семьи отсуствует ");
+            Shop shop = context.Shops.Where(p => p.ProductName == WeaponName).Single();
+            if (shop == null) return NotFound("Не существует оружия под таким названием");
+            else if (shop.ProductName == "545mm" || shop.ProductName == "762mm" || shop.ProductName == "9mm") return BadRequest("Вы выбрали патрон, а не оружия, для покупки патрон используйте другой запрос");
+            if (family.Money < shop.PricePerPiece) return BadRequest("У семьи не хватает денег на ваши хотелки");
+            family.Money -= shop.PricePerPiece;
+
+            Weapon weapon = context.Weapons.Where(p => p.FamilyMemberId == FamilyMemberId).Single();
+                
+            int? AmmunitionTypeId = AmmunitionTypes.ContainsKey(shop.ProductName) ? AmmunitionTypes[shop.ProductName] : null;
+            if (weapon == null)
+            {
+                context.Weapons.Add(new Weapon
+                {
+                    FamilyMemberId = FamilyMemberId,
+                    Name = shop.ProductName,
+                    AmmunitionTypeId = AmmunitionTypeId,
+                    AmmunitionCount = AmmunitionTypeId == null ? null : 0
+                }); 
+            }
+            else
+            {
+                weapon.Name = shop.ProductName;
+                weapon.AmmunitionTypeId = AmmunitionTypeId;
+                weapon.AmmunitionCount = AmmunitionTypeId == null ? null : 0;
+            }
+
+            shop.Count -= 1;
+            try
+            {
+                context.SaveChanges();
+                return Ok("Запрос успешен");
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public ActionResult BuyAmmunition(int FamilyMemberId, string AmmunitionName, int Count)
+        {
+            FamilyMember member = context.FamilyMembers.Where(p => p.Id == FamilyMemberId).Single();
+            if (member == null) return NotFound("Не найден такой член семьи");
+            MafiaFamily family = context.MafiaFamilies.Where(p => p.Id == member.MafiaFamilyId).Single();
+            //if (weapon == null) return BadRequest("У члена семьи отсуствует ");
+            Shop? shop = context.Shops.Where(p => p.ProductName == AmmunitionName).Single();
+            
+            if (shop == null) return NotFound("Не существует патрон под таким названием");
+            Weapon weapon = context.Weapons.Where(p => p.FamilyMemberId == FamilyMemberId).Single();
+            if (weapon == null) return NotFound("У члена семьи нет оружия");
+
+            else if (weapon.AmmunitionTypeId == null || context.AmmunitionTypes.Where(p => p.Id == weapon.AmmunitionTypeId).Single().Type != AmmunitionName) return BadRequest("Оружие члена семьи не использует такой тип боеприпасов");
+
+            if (family.Money < shop.PricePerPiece * Count) return BadRequest("У семьи не хватает денег на ваши хотелки");
+            if (shop.Count < Count) return BadRequest("В магазине нет столько патрон");
+
+            family.Money -= shop.PricePerPiece * Count;
+            shop.Count -= Count;
+            weapon.AmmunitionCount += Count;
+
+            try
+            {
+                context.SaveChanges();
+                return Ok("Запрос успешен");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         public IActionResult Index()

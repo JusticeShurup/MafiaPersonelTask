@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Domain.Entities;
 
-namespace Domain.Enums;
+namespace Domain;
 
 public partial class OrganizationType
 {

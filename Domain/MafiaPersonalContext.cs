@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Domain.Persistance;
+namespace Domain;
 
 public partial class MafiaPersonalContext : DbContext
 {
